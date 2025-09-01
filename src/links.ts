@@ -108,13 +108,13 @@ export class Links {
       activeFileCache != null &&
       (activeFileCache.links != null ||
         activeFileCache.embeds != null ||
-        activeFileCache.frontmatterLinks != null)
+        activeFileCache.frontmatter != null)
     ) {
       const seen = new Set<string>();
       const linkEntities = [
         ...(activeFileCache.links || []),
         ...(activeFileCache.embeds || []),
-        ...(activeFileCache.frontmatterLinks || []),
+        ...(activeFileCache.frontmatter?.tags || []).map((tag: string) => ({ link: tag, displayText: tag, position: { start: { line: 0, col: 0, offset: 0 }, end: { line: 0, col: 0, offset: 0 } } })),
       ];
 
       for (const it of linkEntities) {
@@ -145,7 +145,7 @@ export class Links {
               this.settings.createFilesForMultiLinked
             ) {
               await this.app.vault.create(
-                `${this.app.workspace.getActiveFile().parent.path}/${key}.md`,
+                `Keywords/${key}.md`,
                 ""
               );
               resolvedLinks.push(new FileEntity(activeFile.path, key));
